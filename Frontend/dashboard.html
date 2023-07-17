@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Page</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            width:100%;
+        }
+        h1{
+            margin: auto;
+            text-align: center;
+            margin-top: 10px;
+        }
+        #quizList{
+            width:80%;
+            margin: auto;
+            text-align: center;
+            border: 1px solid black;
+            
+            display: flex;
+        }
+        .quiz-card{
+            margin: auto;
+            text-align: center;
+            width:40%;
+            margin-top: 20px;
+            border: 1px solid black;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dashboard</h1>
+    <br><br>
+    <div id="quizList"></div>
+</body>
+    <script>
+        // Fetch quizzes from the backend API
+        fetch('https://puce-precious-xerus.cyclic.app/quiz/api/quiz')
+        .then(response => response.json())
+        .then(data => {
+            const quizListContainer = document.getElementById('quizList');
+
+            data.forEach(quiz => {
+            const quizCard = document.createElement('div');
+            quizCard.classList.add('quiz-card');
+
+            const quizCreator = document.createElement('p');
+            quizCreator.textContent = `Creator: ${quiz.creator}`;
+
+            const quizTitle = document.createElement('h2');
+            quizTitle.textContent = quiz.title;
+
+            const quizDescription = document.createElement('p');
+            quizDescription.textContent = quiz.description;
+
+            const numQuestions = document.createElement('p');
+            numQuestions.textContent = `Number of Questions: ${quiz.questions.length}`;
+
+            const takeQuizButton = document.createElement('button');
+            takeQuizButton.textContent = 'Take Quiz';
+            takeQuizButton.addEventListener('click', () => {
+                // Redirect to the quiz page for taking the quiz
+                window.location.href = `./quiz.html?id=${quiz._id}`;
+            });
+
+            const leaderboardButton = document.createElement('button');
+            leaderboardButton.textContent = 'Leaderboard';
+            leaderboardButton.addEventListener('click', () => {
+                // Redirect to the leaderboard page for the quiz
+                window.location.href = `./leaderboard.html?id=${quiz._id}`;
+            });
+
+            
+            quizCard.appendChild(quizTitle);
+            quizCard.appendChild(quizCreator);
+            quizCard.appendChild(quizDescription);
+            quizCard.appendChild(numQuestions);
+            quizCard.appendChild(takeQuizButton);
+            quizCard.appendChild(leaderboardButton);
+
+            quizListContainer.appendChild(quizCard);
+            });
+        })
+        .catch(error => console.error('Failed to fetch quizzes:', error));
+    </script>
+</html>

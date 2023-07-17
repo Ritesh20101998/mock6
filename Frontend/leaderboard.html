@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Leaderboard</title>
+</head>
+<body>
+  <h1>Leaderboard</h1>
+
+  <div id="leaderboard"></div>
+
+ 
+</body>
+<script>
+    const leaderboardContainer = document.getElementById('leaderboard');
+    const urlParams = new URLSearchParams(window.location.search);
+    const quizId = urlParams.get('id');
+    const score = urlParams.get('score');
+
+    // Fetch leaderboard data from the backend API
+    fetch(`https://puce-precious-xerus.cyclic.app/quiz/api/quizzes/${quizId}/leaderboard`)
+        .then(response => response.json())
+        .then(data => {
+            leaderboardContainer.innerHTML = '<h2>Leaderboard</h2>';
+
+            if (score !== null) {
+            leaderboardContainer.innerHTML += `<p>Your score: ${score}</p>`;
+            }
+
+            if (data.length > 0) {
+                leaderboardContainer.innerHTML += '<ol>';
+                data.forEach(entry => {
+                    leaderboardContainer.innerHTML += `<li>${entry.email}: ${entry.score}</li>`;
+                });
+                leaderboardContainer.innerHTML += '</ol>';
+            } else {
+                leaderboardContainer.innerHTML += '<p>No entries found.</p>';
+            }
+    })
+    .catch(error => console.error('Failed to fetch leaderboard:', error));
+</script>
+</html>
